@@ -1,24 +1,51 @@
 class PrimeTable
 
-  def generate_primes (n = 1)
+  # at some point, this should probably get a class var
+  # to hold the primes found so far (perhaps an array, eh)
+  # so the next time through, we'll already know we've got
+  # first N primes taken care of.
+
+  def initialize (num_primes = 1)
+    @num_primes = num_primes
+  end
+
+  def primes
+    @primes ||= _generate_primes
+    @primes
+  end
+
+  def rows
+    @rows ||= _generate_rows
+    @rows
+  end
+
+  def text_table
+    @table ||= _generate_table
+    @table
+  end
+
+  private
+
+  def _generate_primes
     # in the simplest scenario...
-    return [2] if n == 1
-    supplemental = []
-    # no evens!
+    primes = [2]
+    return primes if @num_primes == 1
+
+    # okidoke, let's make some primes then
     test_num = 3
-    while supplemental.count < n - 1
-      # if test is not factorable by the current primes...
-      if supplemental.empty? or supplemental.none? { |prime| test_num % prime == 0 } 
-        supplemental.push(test_num)
+    while primes.count < @num_primes
+      max_factor = Math.sqrt(test_num).floor
+      if primes.select {|num| num <= max_factor }.none? {|num| test_num % num == 0 }
+        primes.push(test_num)
       end
       test_num += 2
     end
-    # don't forget the deuce!
-    return supplemental.unshift(2)
+
+    return primes
   end
 
   # this will likely change if XXX note in test is correct
-  def generate_rows (primes = [])
+  def _generate_rows
     rows = []
     primes.each_with_index do |row_prime, row_i|
       rows[row_i] = []
@@ -35,14 +62,14 @@ class PrimeTable
     return rows
   end
 
-  # out to term for now, will likely want to provide other
-  # output methods or take formatting objects but this gets
-  # us a pretty table.
-  def generate_table (rows = [[]])
-    _out_to_text(rows)
-  end
+  def _generate_table
+    maxwidth = _calc_widths(rows)
+    format = rows[0].map { '%' + maxwidth.to_s + 's' }.join(' ') + "\n"
 
-  private
+    return rows.reduce('') do |table, row|
+      table += sprintf( format, *row.map {|x| x.to_s })
+    end
+  end
 
   def _calc_widths (rows)
     # thought about a max_width for each col, but lets start with
@@ -56,16 +83,6 @@ class PrimeTable
       end
     end
     return max_width
-  end
-
-  def _out_to_text (rows)
-    # line format
-    maxwidth = _calc_widths(rows)
-    format = rows[0].map { '%' + maxwidth.to_s + 's' }.join(' ') + "\n"
-    # add them to a scalar and out to text
-    return rows.reduce('') do |table, row|
-      table += sprintf( format, *row.map {|x| x.to_s })
-    end
   end
 
 end

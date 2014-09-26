@@ -3,41 +3,26 @@ require 'prime'
 
 RSpec.describe PrimeTable do
 
+  subject do
+    table = PrimeTable.new(5)
+    table
+  end
+
+  it { should be_instance_of(PrimeTable) }
+  it { should respond_to(:primes) }
+  it { should respond_to(:rows) }
+  it { should respond_to(:text_table) }
+
   describe '#new' do
-    pt = PrimeTable.new()
-    it { should be_instance_of(PrimeTable) }
-    it { should respond_to(:generate_primes) }
-    it { should respond_to(:generate_rows) }
-    it { should respond_to(:generate_table) }
+    pt = PrimeTable.new(5)
+    it 'generates first 5 primes' do
+      expect(pt.primes).to eq([2,3,5,7,11])
+    end
   end
 
-  describe '#generate_primes' do
-    let (:pt) { PrimeTable.new }
-
-    describe 'when N = 1' do
-      it 'returns a single element array' do
-        primes = pt.generate_primes(1)
-        expect(primes).to eq( Prime.first(1) )
-      end
-    end
-
-    describe 'when N = 6' do
-      it 'returns the first 6 primes' do
-        primes = pt.generate_primes(6)
-        expect(primes).to eq( Prime.first(6) )
-      end
-    end
-
-  end
-
-  describe '#generate_table' do
-    let (:pt) { PrimeTable.new }
-    
-    it 'returns a row for each prime' do
-      primes = pt.generate_primes(5)
-      rows   = pt.generate_rows(primes)
-      table  = pt.generate_table(rows)
-
+  describe '#text_table' do
+    it 'creates prime multiple table' do
+      table  = PrimeTable.new(5).text_table
       expect(table).to eq(test_table)
     end
   end
