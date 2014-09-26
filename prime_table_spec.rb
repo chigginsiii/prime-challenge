@@ -23,21 +23,14 @@ RSpec.describe PrimeTable do
   describe '#text_table' do
     it 'creates prime multiple table' do
       table  = PrimeTable.new(5).text_table
-      expect(table).to eq(test_table)
+      expect(table).to eq(test_table_too)
     end
   end
 
-  # XXX: if I've understood the coding challenge correctly, the primes
-  # are not headers/labels, but actual rows/cols, so there won't be
-  # a 0.0 cell where the answer is 4, or a 0.1/1.0 with products of 6.
-
-  # I imagine when I come back to the Product owner and show them the
-  # the story and the result, she's going to say "oh, no we want the
-  # products of 2 as well." But let's get this task passing tests and
-  # we can return to formatting.
-
 end
 
+# okay, I've decided the chances that we're looking
+# looking for this table:
 def test_table
   return <<HERE;
   2   3   5   7  11
@@ -48,8 +41,7 @@ def test_table
 HERE
 end
 
-# this is the table I _believe_ we're after, but we'll see after I
-# hear back from the Product Owner.
+# ...instead of this table:
 def test_table_too
   return <<HERE;
       2   3   5   7  11
@@ -62,3 +54,5 @@ def test_table_too
 HERE
 end
 
+# ...is really remote. If test_table's truly what we're looking for,
+# rollback to commit 07e3b34c4c8ae82 and it'll produce test_table.
