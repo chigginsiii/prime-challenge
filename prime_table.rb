@@ -14,11 +14,6 @@ class PrimeTable
     @primes
   end
 
-  def rows
-    @rows ||= _generate_rows
-    @rows
-  end
-
   def text_table
     @table ||= _generate_table
     @table
@@ -44,25 +39,24 @@ class PrimeTable
     return primes
   end
 
-  # this will likely change if XXX note in test is correct
   def _generate_rows
     rows = []
     primes.each_with_index do |row_prime, row_i|
       rows[row_i] = []
       primes.each_with_index do |col_prime, col_i|
-        if row_i == 0
-          rows[row_i][col_i] = col_prime
-        elsif col_i == 0
-          rows[row_i][col_i] = row_prime
-        else
-          rows[row_i][col_i] = row_prime * col_prime
-        end
+        rows[row_i][col_i] = row_prime * col_prime
       end
+      # add the col label
+      rows[row_i].unshift(row_prime)
     end
+
+    # header!
+    rows.unshift(['', *primes])
     return rows
   end
 
   def _generate_table
+    rows = _generate_rows
     maxwidth = _calc_widths(rows)
     format = rows[0].map { '%' + maxwidth.to_s + 's' }.join(' ') + "\n"
 
@@ -72,11 +66,7 @@ class PrimeTable
   end
 
   def _calc_widths (rows)
-    # thought about a max_width for each col, but lets start with
-    # every cell being the same
     max_width = 0
-
-    # this can be tersified by composing, but i prefer readability at this point
     rows.each do |row|
       row.each do |num|
         max_width = num.to_s.size if num.to_s.size > max_width

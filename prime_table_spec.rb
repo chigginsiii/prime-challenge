@@ -10,7 +10,6 @@ RSpec.describe PrimeTable do
 
   it { should be_instance_of(PrimeTable) }
   it { should respond_to(:primes) }
-  it { should respond_to(:rows) }
   it { should respond_to(:text_table) }
 
   describe '#new' do
@@ -49,7 +48,6 @@ def test_table_too
   3   6   9  15  21  33
   5  10  15  25  35  55
   7  14  21  35  49  77
-  9  18  27  45  63  99
  11  22  33  55  77 121
 HERE
 end
